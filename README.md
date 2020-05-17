@@ -11,4 +11,5 @@ The system simulates the behaviour of loan-broker enterprise applications.
 4) When loan-broker receives a new BankInterestReply, it creates a new LoanReply and sends it back to loan-client.
 
 ![](project%20architecture%20images/LoanBrokerSystem.png)
+
 Figure 1. The Loan Broker system
