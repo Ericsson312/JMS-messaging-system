@@ -12,4 +12,4 @@ The system simulates the behaviour of loan-broker enterprise applications.
 
 ![](project%20architecture%20images/LoanBrokerSystem.png)
 
-Figure 1. The Loan Broker system
+            Figure 1. The Loan Broker system
