@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+version 'unspecified'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.apache.activemq/activemq-client
+    compile group: 'org.apache.activemq', name: 'activemq-client', version: '5.15.12'
+}

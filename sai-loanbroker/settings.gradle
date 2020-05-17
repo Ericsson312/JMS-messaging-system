@@ -1,0 +1,6 @@
+rootProject.name = 'sai-loanbroker'
+include 'loan-client'
+include 'bank'
+include 'loan-broker'
+include 'messaging'
+

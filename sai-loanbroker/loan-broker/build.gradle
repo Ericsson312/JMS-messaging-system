@@ -1,0 +1,27 @@
+plugins {
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'application'
+}
+
+javafx {
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
+application {
+    mainClassName = 'loanbroker.gui.LoanBrokerMain'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile files(fileTree(dir: 'lib', includes: ['*.jar']))
+    // https://mvnrepository.com/artifact/org.apache.activemq/activemq-client
+    compile group: 'org.apache.activemq', name: 'activemq-client', version: '5.15.12'
+    // json serialization
+    implementation 'com.google.code.gson:gson:2.8.6'
+    // add messaging dependence to loan-client
+    compile project(':messaging')
+}
+

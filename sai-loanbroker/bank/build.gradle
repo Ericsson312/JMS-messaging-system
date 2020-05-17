@@ -1,0 +1,98 @@
+plugins {
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'application'
+}
+
+javafx {
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.apache.activemq/activemq-client
+    compile group: 'org.apache.activemq', name: 'activemq-client', version: '5.15.12'
+    // json serialization
+    implementation 'com.google.code.gson:gson:2.8.6'
+    // add messaging dependence to loan-client
+    compile project(':messaging')
+}
+
+application {
+    //mainClassName = 'bank.gui.BankMain'
+    mainClassName = 'bank.gui.BankMainArgs'
+    /*
+    *** How to run with GRADLE run task ***
+    run application with 2 arguments REQUEST_QUEUE and BANK_NAME
+    gradlew bank:run --args="REQUEST_QUEUE BANK_NAME"
+    gradlew bank:run --args "raboRequestQueue RaboBank"
+    gradlew bank:run --args "abnRequestQueue ABNAmro"
+    gradlew bank:run --args "ingRequestQueue ING"
+    */
+}
+
+/**
+ * Or run the 3 banks with these custom tasks:
+ * - in weeks 1, 2 and 3 you will run only one bank (e.g., ABN Amro)
+ * - in week 4 you will run all 3 banks: ABN Amro, ING and RaboBank
+ */
+task runABNAMRO(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = mainClassName
+    //if you have error message about missing modules in java FX, uncomment this line:
+    // jvmArgs = ['--module-path', classpath.asPath,'--add-modules', 'javafx.controls,javafx.fxml']
+    args "abnRequestQueue", "ABNAmro"
+}
+
+task runING(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    //if you have error message about missing modules in java FX, uncomment this line:
+    // jvmArgs = ['--module-path', classpath.asPath,'--add-modules', 'javafx.controls,javafx.fxml']
+    main = mainClassName
+    args "ingRequestQueue", "ING"
+}
+
+task runRABO(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    //if you have error message about missing modules in java FX, uncomment this line:
+    // jvmArgs = ['--module-path', classpath.asPath,'--add-modules', 'javafx.controls,javafx.fxml']
+    main = mainClassName
+    args "raboRequestQueue", "MajaBank"
+}
+
+/*
+ *** How to run with Java ***
+
+run bank.jar file with 2 arguments REQUEST_QUEUE and BANK_NAME
+
+java -jar --module-path c:\myTools\javafx-sdk-11.0.2\lib\ --add-modules javafx.controls,javafx.fxml bank.jar raboRequestQueue RaboBank
+java -jar --module-path c:\myTools\javafx-sdk-11.0.2\lib\ --add-modules javafx.controls,javafx.fxml bank.jar abnRequestQueue ABNAmro
+java -jar --module-path c:\myTools\javafx-sdk-11.0.2\lib\ --add-modules javafx.controls,javafx.fxml bank.jar ingRequestQueue ING
+*/
+jar {
+    archiveFileName = 'bank.jar' // name of the generated .jar file
+
+    manifest {    // class where the main method is
+        attributes 'Main-Class': 'bank.gui.BankMainArgs'
+    }
+    // add all dependencies to the executable .jar file
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+ext {
+    modelPackage = 'bank/model/*' // package from which the .jar file will be created
+    modelJarName = "bankModel.jar" // name of the .jar file
+    modelSourcePath = "${buildDir}/libs/"+ modelJarName // absolute path of created .jar file
+    modelDestPath = "${rootProject.projectDir}/loan-broker/lib/" // path of the LIB folder in broker application
+}
+
+task createModelJar(type: Jar, dependsOn: compileJava) {
+    archiveName = modelJarName
+    from sourceSets.main.output
+    include modelPackage
+    print 'created ' + modelSourcePath + ' with classes from ' + modelPackage
+}
+
+task copyModelJarToBroker(type: Copy,dependsOn:[createModelJar]) {
+    from modelSourcePath
+    into modelDestPath
+    print 'copied '+ modelSourcePath + ' into ' + modelDestPath
+}

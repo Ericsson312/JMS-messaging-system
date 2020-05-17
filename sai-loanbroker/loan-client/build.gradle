@@ -1,0 +1,52 @@
+plugins {
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'application'
+}
+
+javafx {
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.apache.activemq/activemq-client
+    compile group: 'org.apache.activemq', name: 'activemq-client', version: '5.15.12'
+    // json serialization
+    implementation 'com.google.code.gson:gson:2.8.6'
+    // add messaging dependence to loan-client
+    compile project(':messaging')
+}
+
+application {
+    mainClassName = 'loanclient.gui.LoanClientMain'
+}
+
+jar {
+    archiveFileName = 'loan-client.jar' // name of the generated .jar file
+
+    manifest {    // class where the main method is
+        attributes 'Main-Class': 'loanclient.gui.LoanClientMain'
+    }
+    // add all dependencies to the executable .jar file
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+ext {
+    modelPackage = 'loanclient/model/*' // package from which the .jar file will be created
+    modelJarName = "clientModel.jar" // name of the .jar file
+    modelSourcePath = "${buildDir}/libs/"+ modelJarName // absolute path of created .jar file
+    modelDestPath = "${rootProject.projectDir}/loan-broker/lib/" // path of the LIB folder in broker application
+}
+
+task createModelJar(type: Jar, dependsOn: compileJava) {
+    archiveName = modelJarName
+    from sourceSets.main.output
+    include modelPackage
+    print 'created ' + modelSourcePath + ' with classes from ' + modelPackage
+}
+
+task copyModelJarToBroker(type: Copy,dependsOn:[createModelJar]) {
+    from modelSourcePath
+    into modelDestPath
+    print 'copied '+ modelSourcePath + ' into ' + modelDestPath
+}
+
