@@ -30,6 +30,7 @@ public class BankAppGateway {
             @Override
             public void onMessage(Message message) {
                 try {
+                    // deserialize bank reply
                     BankInterestReply interestReply = bankSerializer.deserializeBankInterestReply(((TextMessage)message).getText());
                     // send bank reply to broker controller listener
                     bankReplyListener.onReplyReceived(interestReply);

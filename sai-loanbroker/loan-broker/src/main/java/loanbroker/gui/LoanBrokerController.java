@@ -2,6 +2,8 @@ package loanbroker.gui;
 
 import bank.model.BankInterestReply;
 import bank.model.BankInterestRequest;
+import javafx.application.Platform;
+import loanbroker.model.Agency;
 import loanclient.model.LoanReply;
 import loanclient.model.LoanRequest;
 import loanbroker.gateway.*;
@@ -32,10 +34,16 @@ public class LoanBrokerController implements Initializable {
 
             loanClientAppGateway.setRequestListener(new LoanRequestListener() {
                 @Override
-                public void onRequestReceived(LoanRequest loanRequest) {
-                    BankInterestRequest bankInterestRequest = new BankInterestRequest(loanRequest.getId(), loanRequest.getAmount(), loanRequest.getTime());
+                public void onRequestReceived(LoanRequest loanRequest, Agency agency) {
+                    BankInterestRequest bankInterestRequest = new BankInterestRequest(loanRequest.getId(), loanRequest.getAmount(), loanRequest.getTime(),
+                            agency.getCreditScore(), agency.getHistory());
                     try {
                         bankAppGateway.sendBankInterestRequest(bankInterestRequest);
+
+                        ListViewLine listViewLine = new ListViewLine(loanRequest);
+                        listViewLine.setAgency(agency);
+                        lvLoanRequestReply.getItems().add(listViewLine);
+
                     } catch (Exception exc) {
                         logger.info("Error while sending bank interest request: " + exc.getMessage());
                     }
@@ -48,6 +56,19 @@ public class LoanBrokerController implements Initializable {
                     LoanReply loanReply = new LoanReply(bankInterestReply.getId(), bankInterestReply.getInterest(), bankInterestReply.getBankId());
                     try {
                         loanClientAppGateway.sendLoanReply(loanReply);
+
+                        for (int i = 0; i < lvLoanRequestReply.getItems().size(); i++) {
+                            ListViewLine listLine = lvLoanRequestReply.getItems().get(i);
+                            if (listLine.getLoanRequest().getId().equals(loanReply.getId())) {
+                                listLine.setLoanReply(loanReply);
+                            }
+                        }
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                lvLoanRequestReply.refresh();
+                            }
+                        });
                     } catch (Exception exc) {
                         logger.info("Error while sending loan reply: " + exc.getMessage());
                     }

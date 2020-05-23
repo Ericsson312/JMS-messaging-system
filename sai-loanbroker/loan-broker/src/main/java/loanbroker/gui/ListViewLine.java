@@ -1,5 +1,6 @@
 package loanbroker.gui;
 
+import loanbroker.model.Agency;
 import loanclient.model.LoanReply;
 import loanclient.model.LoanRequest;
 
@@ -7,6 +8,7 @@ public class ListViewLine {
 
     private LoanRequest loanRequest;
     private LoanReply loanReply;
+    private Agency agency;
 
     public ListViewLine(LoanRequest loanRequest) {
         setLoanRequest(loanRequest);
@@ -26,6 +28,11 @@ public class ListViewLine {
         this.loanReply = loanReply;
     }
 
+    public void setAgency(Agency agency) {
+        this.agency = agency;
+    }
+
+
     /**
      * This method defines how one line is shown in the ListViewLine.
      * @return
@@ -34,7 +41,7 @@ public class ListViewLine {
      */
     @Override
     public String toString() {
-        return loanRequest.toString() + "  --->  " + ((loanReply !=null) ? loanReply.toString() : "waiting for reply...");
+        return loanRequest.toString() + " " + ((agency != null) ? agency.toString() : "") + "  --->  " + ((loanReply != null) ? loanReply.toString() : "waiting for reply...");
     }
 
 }

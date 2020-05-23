@@ -14,19 +14,25 @@ public class BankInterestRequest implements Serializable {
     private String id;
     private int amount; // the requested loan amount
     private int time; // the requested loan period
+    private int creditScore;
+    private int history;
 
     public BankInterestRequest() {
         super();
         this.amount = 0;
         this.time = 0;
         this.id = "";
+        this.creditScore = 0;
+        this.history = 0;
     }
 
-    public BankInterestRequest(String id, int amount, int time) {
+    public BankInterestRequest(String id, int amount, int time, int creditScore, int history) {
         super();
         this.id = id;
         this.amount = amount;
         this.time = time;
+        this.creditScore = creditScore;
+        this.history = history;
     }
 
     public int getAmount() {
@@ -37,7 +43,7 @@ public class BankInterestRequest implements Serializable {
         this.amount = amount;
     }
 
-       public int getTime() {
+    public int getTime() {
         return time;
     }
 
