@@ -10,3 +10,6 @@ The system simulates the behaviour of loan-broker enterprise applications.
   b. when the user of bank enters an interest rate for one of the received BankInterestRequests, bank creates a new BankInterestReply and        sends it back to the LoanBroker.
 4) When loan-broker receives a new BankInterestReply, it creates a new LoanReply and sends it back to loan-client.
 
+![](project%20architecture%20images/LoanBrokerSystem.png)
+
+Figure 1. The Loan Broker system
