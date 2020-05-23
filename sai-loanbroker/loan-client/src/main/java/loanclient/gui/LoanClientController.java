@@ -50,6 +50,7 @@ public class LoanClientController implements Initializable {
         } catch (Exception exc) {
             logger.info("Error while sending request: " + loanRequest + "\n" + exc.getMessage());
         }
+
         logger.info("Sent the loan request: " + loanRequest);
     }
 

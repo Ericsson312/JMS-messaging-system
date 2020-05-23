@@ -43,8 +43,9 @@ public class LoanClientAppGateway {
         });
     }
 
+    // send loan reply to client
     public void sendLoanReply(LoanReply loanReply) throws JMSException {
-        // loop through all stored jms messages to find a proper recipient
+        // loop through all stored jms messages in order to find a proper recipient
         for (Message msg : clientMessages) {
             LoanRequest loanRequest = loanSerializer.deserializeLoadRequest(((TextMessage) msg).getText());
             if (loanRequest.getId().equals(loanReply.getId())) {

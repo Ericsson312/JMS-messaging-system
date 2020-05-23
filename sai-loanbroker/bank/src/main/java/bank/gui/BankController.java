@@ -1,6 +1,7 @@
 package bank.gui;
 
-import bank.gateway.BankSerializer;
+import bank.gateway.BankRequestListener;
+import bank.gateway.LoanBrokerAppGateway;
 import bank.model.BankInterestReply;
 import bank.model.BankInterestRequest;
 import javafx.application.Platform;
@@ -8,14 +9,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import jmsmessaging.MessageReceiverGateway;
-import jmsmessaging.MessageSenderGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javax.jms.*;
 
 class BankController implements Initializable {
     private final String bankId;
@@ -27,9 +24,7 @@ class BankController implements Initializable {
     @FXML
     public TextField tfInterest;
 
-    private MessageReceiverGateway messageReceiverGateway;
-    private MessageSenderGateway messageSenderGateway;
-    private BankSerializer bankSerializer;
+    private LoanBrokerAppGateway appGateway;
 
     public BankController(String queueName, String bankId){
         this.bankId = bankId;
@@ -45,9 +40,7 @@ class BankController implements Initializable {
         if (listViewLine!= null){
             BankInterestReply bankInterestReply = new BankInterestReply(listViewLine.getBankInterestRequest().getId(), interest, bankId);
             try {
-                String serializedMessage = bankSerializer.serializeBankInterestReply(bankInterestReply);
-                Message message = messageSenderGateway.createTextMessage(serializedMessage);
-                messageSenderGateway.send(message);
+                appGateway.sendBankInterestReply(bankInterestReply);
             } catch (Exception exc) {
                 logger.info("Error while sending request:" + exc.getMessage());
             }
@@ -65,21 +58,15 @@ class BankController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            bankSerializer = new BankSerializer();
-            messageReceiverGateway = new MessageReceiverGateway("bankInterestReplyQueue");
-            messageSenderGateway = new MessageSenderGateway(queueName);
-            messageReceiverGateway.openConnection();
-            messageSenderGateway.openConnection();
-
-            messageReceiverGateway.setListener(new MessageListener() {
+            appGateway = new LoanBrokerAppGateway("bankInterestReplyQueue", queueName);
+            appGateway.setRequestListener(new BankRequestListener() {
                 @Override
-                public void onMessage(Message message) {
+                public void onRequestReceived(BankInterestRequest bankInterestRequest) {
                     try {
-                        BankInterestRequest loanRequest = bankSerializer.deserializeBankInterestRequest(((TextMessage)message).getText());
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
-                                lvBankRequestReply.getItems().add(new ListViewLine(loanRequest));
+                                lvBankRequestReply.getItems().add(new ListViewLine(bankInterestRequest));
                                 lvBankRequestReply.refresh();
                             }
                         });

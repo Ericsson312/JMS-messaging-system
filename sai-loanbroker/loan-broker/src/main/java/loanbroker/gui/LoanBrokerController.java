@@ -49,7 +49,7 @@ public class LoanBrokerController implements Initializable {
                     try {
                         loanClientAppGateway.sendLoanReply(loanReply);
                     } catch (Exception exc) {
-                        logger.info("Error while sending bank interest request: " + exc.getMessage());
+                        logger.info("Error while sending loan reply: " + exc.getMessage());
                     }
                 }
             });

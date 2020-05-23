@@ -27,6 +27,7 @@ public class LoanBrokerAppGateway {
         messageReceiverGateway.openConnection();
         messageSenderGateway.openConnection();
 
+        // start listening for loan replies messages from broker
         messageReceiverGateway.setListener(new MessageListener() {
             @Override
             public void onMessage(Message message) {
@@ -50,6 +51,7 @@ public class LoanBrokerAppGateway {
         });
     }
 
+    // send loan request from client to broker
     public void applyForLoan(LoanRequest loanRequest) throws JMSException {
         requests.add(loanRequest);
         String serializedMessage = loanSerializer.serializeLoanRequest(loanRequest);
