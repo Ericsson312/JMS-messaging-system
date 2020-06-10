@@ -18,7 +18,6 @@ public class LoanBrokerMain extends Application {
     public void start(Stage primaryStage) throws Exception{
         final Logger logger = LoggerFactory.getLogger(getClass());
 
-
         URL url  = getClass().getClassLoader().getResource( "loanbroker.fxml");
         if (url != null) {
             Parent root = FXMLLoader.load(url);

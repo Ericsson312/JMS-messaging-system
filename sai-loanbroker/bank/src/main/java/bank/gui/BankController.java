@@ -58,7 +58,10 @@ class BankController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            appGateway = new LoanBrokerAppGateway("bankInterestReplyQueue", queueName);
+            // receive messages from - bankInterestReplyQueue
+            // send messages to - queueName
+            //appGateway = new LoanBrokerAppGateway("bankInterestReplyQueue", queueName);
+            appGateway = new LoanBrokerAppGateway(queueName, "bankInterestReplyQueue");
             appGateway.setRequestListener(new BankRequestListener() {
                 @Override
                 public void onRequestReceived(BankInterestRequest bankInterestRequest) {

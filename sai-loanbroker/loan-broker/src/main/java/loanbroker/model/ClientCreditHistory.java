@@ -2,17 +2,17 @@ package loanbroker.model;
 
 import java.io.Serializable;
 
-public class Agency implements Serializable {
+public class ClientCreditHistory implements Serializable {
     private int creditScore;
     private int history;
 
-    public Agency() {
+    public ClientCreditHistory() {
         super();
         creditScore = 0;
         history = 0;
     }
 
-    public Agency(int creditScore, int history) {
+    public ClientCreditHistory(int creditScore, int history) {
         super();
         this.creditScore = creditScore;
         this.history = history;
@@ -36,6 +36,6 @@ public class Agency implements Serializable {
 
     @Override
     public String toString() {
-        return "creditScore=" + creditScore + " history=" + history;
+        return "score=" + creditScore + " history=" + history;
     }
 }

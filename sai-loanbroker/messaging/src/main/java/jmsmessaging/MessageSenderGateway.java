@@ -3,6 +3,8 @@ package jmsmessaging;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import javax.jms.*;
 
+import static jmsmessaging.Constants.TCP_CONNECTION;
+
 public class MessageSenderGateway {
     private Connection connection;
     private Session session;
@@ -11,7 +13,7 @@ public class MessageSenderGateway {
 
     public MessageSenderGateway(String queueName) {
         try {
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(TCP_CONNECTION);
             connectionFactory.setTrustAllPackages(true);
             connection = connectionFactory.createConnection();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -40,6 +42,10 @@ public class MessageSenderGateway {
 
     public Destination getDestination() {
         return destination;
+    }
+
+    public Session getSession() {
+        return session;
     }
 
     public void openConnection() {

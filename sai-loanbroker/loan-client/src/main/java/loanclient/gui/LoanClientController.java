@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import static jmsmessaging.Constants.*;
 
 public class LoanClientController implements Initializable {
     final Logger logger = LoggerFactory.getLogger(getClass());

@@ -1,7 +1,7 @@
 package loanbroker.gateway;
 
-import loanbroker.model.Agency;
+import loanbroker.model.ClientCreditHistory;
 
 public interface AgencyReplyListener {
-    void onReplyReceived(Agency agency);
+    void onReplyReceived(ClientCreditHistory clientCreditHistory);
 }

@@ -15,6 +15,7 @@ public class LoanBrokerAppGateway {
     private BankRequestListener bankRequestListener;
     private MessageReceiverGateway messageReceiverGateway;
     private MessageSenderGateway messageSenderGateway;
+    private int aggregationId;
 
     public LoanBrokerAppGateway(String receiverQueueName, String senderQueueName) {
         bankSerializer = new BankSerializer();
@@ -22,13 +23,14 @@ public class LoanBrokerAppGateway {
         messageSenderGateway = new MessageSenderGateway(senderQueueName);
         messageReceiverGateway.openConnection();
         messageSenderGateway.openConnection();
+        aggregationId = 0;
 
         messageReceiverGateway.setListener(new MessageListener() {
             @Override
             public void onMessage(Message message) {
                 try {
+                    aggregationId = message.getIntProperty("aggregationId");
                     BankInterestRequest bankInterestRequest = bankSerializer.deserializeBankInterestRequest(((TextMessage)message).getText());
-
                     bankRequestListener.onRequestReceived(bankInterestRequest);
                 } catch (JMSException exc) {
                     exc.printStackTrace();
@@ -40,6 +42,7 @@ public class LoanBrokerAppGateway {
     public void sendBankInterestReply(BankInterestReply bankInterestReply) throws JMSException {
         String serializedMessage = bankSerializer.serializeBankInterestReply(bankInterestReply);
         Message message = messageSenderGateway.createTextMessage(serializedMessage);
+        message.setIntProperty("aggregationId", aggregationId);
         messageSenderGateway.send(message);
     }
 

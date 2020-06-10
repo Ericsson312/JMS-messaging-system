@@ -21,6 +21,8 @@ dependencies {
     compile group: 'org.apache.activemq', name: 'activemq-client', version: '5.15.12'
     // json serialization
     implementation 'com.google.code.gson:gson:2.8.6'
+    // https://mvnrepository.com/artifact/org.mariuszgromada.math/MathParser.org-mXparser
+    compile group: 'org.mariuszgromada.math', name: 'MathParser.org-mXparser', version: '4.0.0'
     // add messaging dependence to loan-client
     compile project(':messaging')
 }

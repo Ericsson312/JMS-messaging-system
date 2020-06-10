@@ -3,7 +3,7 @@ package loanbroker.gui;
 import bank.model.BankInterestReply;
 import bank.model.BankInterestRequest;
 import javafx.application.Platform;
-import loanbroker.model.Agency;
+import loanbroker.model.ClientCreditHistory;
 import loanclient.model.LoanReply;
 import loanclient.model.LoanRequest;
 import loanbroker.gateway.*;
@@ -30,20 +30,26 @@ public class LoanBrokerController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             loanClientAppGateway = new LoanClientAppGateway("requestLoanClientQueue", null);
-            bankAppGateway = new BankAppGateway("ingRequestQueue", "bankInterestReplyQueue");
+            //bankAppGateway = new BankAppGateway("ingRequestQueue", "bankInterestReplyQueue");
+            bankAppGateway = new BankAppGateway("bankInterestReplyQueue", null);
 
             loanClientAppGateway.setRequestListener(new LoanRequestListener() {
                 @Override
-                public void onRequestReceived(LoanRequest loanRequest, Agency agency) {
+                public void onRequestReceived(LoanRequest loanRequest, ClientCreditHistory clientCreditHistory) {
                     BankInterestRequest bankInterestRequest = new BankInterestRequest(loanRequest.getId(), loanRequest.getAmount(), loanRequest.getTime(),
-                            agency.getCreditScore(), agency.getHistory());
+                            clientCreditHistory.getCreditScore(), clientCreditHistory.getHistory());
                     try {
                         bankAppGateway.sendBankInterestRequest(bankInterestRequest);
 
                         ListViewLine listViewLine = new ListViewLine(loanRequest);
-                        listViewLine.setAgency(agency);
-                        lvLoanRequestReply.getItems().add(listViewLine);
+                        listViewLine.setClientCreditHistory(clientCreditHistory);
 
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                lvLoanRequestReply.getItems().add(listViewLine);
+                            }
+                        });
                     } catch (Exception exc) {
                         logger.info("Error while sending bank interest request: " + exc.getMessage());
                     }

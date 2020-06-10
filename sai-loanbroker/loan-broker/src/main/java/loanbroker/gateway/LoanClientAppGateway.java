@@ -2,8 +2,9 @@ package loanbroker.gateway;
 
 import jmsmessaging.MessageReceiverGateway;
 import jmsmessaging.MessageSenderGateway;
+import jmsmessaging.Constants.*;
 import loanbroker.http.ApiClient;
-import loanbroker.model.Agency;
+import loanbroker.model.ClientCreditHistory;
 import loanbroker.model.Archive;
 import loanclient.model.LoanReply;
 import loanclient.model.LoanRequest;
@@ -44,8 +45,8 @@ public class LoanClientAppGateway {
                     apiClient.sendToAgency(loanRequest.getSsn());
                     apiClient.setAgencyReplyListener(new AgencyReplyListener() {
                         @Override
-                        public void onReplyReceived(Agency agency) {
-                            loanRequestListener.onRequestReceived(loanRequest, agency);
+                        public void onReplyReceived(ClientCreditHistory clientCreditHistory) {
+                            loanRequestListener.onRequestReceived(loanRequest, clientCreditHistory);
                         }
                     });
                 } catch (JMSException exc) {

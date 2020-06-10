@@ -2,10 +2,8 @@ package loanbroker.http;
 
 import com.google.gson.Gson;
 import loanbroker.gateway.AgencyReplyListener;
-import loanbroker.gateway.LoanRequestListener;
-import loanbroker.model.Agency;
+import loanbroker.model.ClientCreditHistory;
 import loanbroker.model.Archive;
-
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -32,7 +30,7 @@ public class ApiClient {
 
         client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenAccept(response -> {
             if (response.statusCode() / 100 == 2) {
-                System.out.println("Loan was successfully added to archive");
+                System.out.println("Loan data was successfully added to archive");
             } else {
                 System.out.println("Response error " + response.statusCode());
                 System.out.println(response);
@@ -49,7 +47,7 @@ public class ApiClient {
 
         client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenAccept(response -> {
             if (response.statusCode() / 100 == 2) {
-                agencyReplyListener.onReplyReceived(gson.fromJson(response.body(), Agency.class));
+                agencyReplyListener.onReplyReceived(gson.fromJson(response.body(), ClientCreditHistory.class));
             } else {
                 System.out.println("Response error " + response.statusCode());
                 System.out.println(response);

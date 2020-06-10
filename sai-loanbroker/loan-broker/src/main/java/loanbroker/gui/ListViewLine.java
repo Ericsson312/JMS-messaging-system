@@ -1,6 +1,6 @@
 package loanbroker.gui;
 
-import loanbroker.model.Agency;
+import loanbroker.model.ClientCreditHistory;
 import loanclient.model.LoanReply;
 import loanclient.model.LoanRequest;
 
@@ -8,7 +8,7 @@ public class ListViewLine {
 
     private LoanRequest loanRequest;
     private LoanReply loanReply;
-    private Agency agency;
+    private ClientCreditHistory clientCreditHistory;
 
     public ListViewLine(LoanRequest loanRequest) {
         setLoanRequest(loanRequest);
@@ -28,8 +28,8 @@ public class ListViewLine {
         this.loanReply = loanReply;
     }
 
-    public void setAgency(Agency agency) {
-        this.agency = agency;
+    public void setClientCreditHistory(ClientCreditHistory clientCreditHistory) {
+        this.clientCreditHistory = clientCreditHistory;
     }
 
 
@@ -41,7 +41,7 @@ public class ListViewLine {
      */
     @Override
     public String toString() {
-        return loanRequest.toString() + " " + ((agency != null) ? agency.toString() : "") + "  --->  " + ((loanReply != null) ? loanReply.toString() : "waiting for reply...");
+        return loanRequest.toString() + " " + ((clientCreditHistory != null) ? clientCreditHistory.toString() : "") + "  --->  " + ((loanReply != null) ? loanReply.toString() : "waiting for reply...");
     }
 
 }

@@ -55,7 +55,7 @@ task runRABO(type: JavaExec) {
     //if you have error message about missing modules in java FX, uncomment this line:
     // jvmArgs = ['--module-path', classpath.asPath,'--add-modules', 'javafx.controls,javafx.fxml']
     main = mainClassName
-    args "raboRequestQueue", "MajaBank"
+    args "raboRequestQueue", "RABO"
 }
 
 /*
