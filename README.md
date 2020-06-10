@@ -1,6 +1,6 @@
 # JMS-Messaging-System
 
-The system consists of several java desktop applications. The applications send and receive messages using JMS system simulates the behaviour of loan-broker enterprise applications.
+The system consists of several java desktop applications. The applications send and receive messages using JMS system and simulates the behaviour of loan-broker enterprise applications.
 
 1) LoanClient sends loan request(s) to the LoanBroker app.
 2) When the LoanBroker receives a new loan request, it creates a BankInterestRequest and sends it to a bank.
