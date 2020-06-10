@@ -1,0 +1,2 @@
+- archive.war, credit.war and creditModel.jar are all built with OpenJDK 11.
+- domain model of the credit service is in creditModel.jar. 
